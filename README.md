@@ -168,6 +168,11 @@ Consultar las tareas disponibles:
 ```bash
 ./gradlew tasks
 ```
+Testing Individual de Tareas: 
+
+```bash
+./gradlew test --tests "com.baasg.gradle.CodeQualityConventionsPluginTest" --info --stacktrace
+```
 
 ## Filosofía de diseño
 
