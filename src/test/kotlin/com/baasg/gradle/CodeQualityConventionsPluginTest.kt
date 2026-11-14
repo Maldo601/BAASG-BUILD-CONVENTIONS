@@ -4,6 +4,7 @@ package com.baasg.gradle
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Files
@@ -28,9 +29,11 @@ class CodeQualityConventionsPluginTest {
             plugins {
                 id("com.baasg.code-quality-conventions")
             }
+
             repositories {
                 mavenCentral()
             }
+
             tasks.register("verifyConventions") {
                 doLast {
                     check(project.pluginManager.hasPlugin("java"))
@@ -50,7 +53,6 @@ class CodeQualityConventionsPluginTest {
             """.trimIndent()
         )
 
-        // Java source used to validate the embedded Checkstyle configuration.
         val javaSource = projectDir.resolve(
             "src/main/java/com/baasg/Sample.java"
         )
@@ -75,6 +77,8 @@ class CodeQualityConventionsPluginTest {
             .withPluginClasspath()
             .withArguments(
                 "verifyConventions",
+                "spotlessApply",
+                "spotlessCheck",
                 "checkstyleMain",
                 "--stacktrace",
                 "--info"
@@ -82,14 +86,35 @@ class CodeQualityConventionsPluginTest {
             .forwardOutput()
             .build()
 
-        assertEquals(
-            TaskOutcome.SUCCESS,
-            result.task(":verifyConventions")?.outcome
+        fun assertTaskSucceeded(taskName: String) {
+            val outcome = result.task(":$taskName")?.outcome
+
+            assertTrue(
+                outcome == TaskOutcome.SUCCESS ||
+                    outcome == TaskOutcome.UP_TO_DATE,
+                "Task $taskName did not succeed. Actual outcome: $outcome"
+            )
+        }
+
+        assertTaskSucceeded("verifyConventions")
+        assertTaskSucceeded("spotlessApply")
+        assertTaskSucceeded("spotlessCheck")
+        assertTaskSucceeded("checkstyleMain")
+
+        val formattedSource = Files.readString(javaSource)
+
+        println("========== FORMATTED JAVA SOURCE ==========")
+        println(formattedSource.replace(" ", "·"))
+        println("===========================================")
+
+        assertTrue(
+            formattedSource.contains("    public void run() {"),
+            "Expected 4 spaces before the method declaration"
         )
 
-        assertEquals(
-            TaskOutcome.SUCCESS,
-            result.task(":checkstyleMain")?.outcome
+        assertTrue(
+            formattedSource.contains("        System.out.println"),
+            "Expected 8 spaces before the method body statement"
         )
     }
 }
