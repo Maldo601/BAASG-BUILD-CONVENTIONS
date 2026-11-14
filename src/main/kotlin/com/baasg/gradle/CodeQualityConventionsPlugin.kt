@@ -24,7 +24,7 @@ class CodeQualityConventionsPlugin : Plugin<Project> {
         project.extensions.configure(SpotlessExtension::class.java) {
             java {
                 target("src/**/*.java")
-                googleJavaFormat("1.27.0")
+                googleJavaFormat("1.30.0")
                 removeUnusedImports()
                 trimTrailingWhitespace()
                 endWithNewline()

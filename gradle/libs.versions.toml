@@ -5,7 +5,7 @@ gradle = "9.9.1"
 spring-boot = "4.1.2"
 junit = "6.0.1"
 jacoco = "0.8.16"
-spotless = "8.2.1"
+spotless = "8.11.0"
 
 [libraries]
 spring-boot-gradle-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot" }

@@ -22,7 +22,7 @@ Su objetivo es establecer una configuración homogénea entre los proyectos Java
 | Spring Boot | 4.1.2 |
 | JUnit | 6.0.1 |
 | JaCoCo | 0.8.16 |
-| Spotless | 8.2.1 |
+| Spotless | 8.11.0 |
 | Google Java Format | 1.27.0 |
 | Checkstyle | 14.4.0 |
 
