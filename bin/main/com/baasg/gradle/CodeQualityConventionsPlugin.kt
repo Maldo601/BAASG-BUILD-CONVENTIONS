@@ -6,6 +6,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstyleExtension
+import org.gradle.api.artifacts.dsl.RepositoryHandler
 
 class CodeQualityConventionsPlugin : Plugin<Project> {
 
@@ -22,14 +23,11 @@ class CodeQualityConventionsPlugin : Plugin<Project> {
 
         project.extensions.configure(SpotlessExtension::class.java) {
             java {
-                eclipse().configProperties(
-                    mapOf(
-                        "org.eclipse.jdt.core.formatter.tabulation.char" to "space",
-                        "org.eclipse.jdt.core.formatter.tabulation.size" to "8",
-                        "org.eclipse.jdt.core.formatter.indentation.size" to "8",
-                        "org.eclipse.jdt.core.formatter.indent_empty_lines" to "false"
-                    )
-                )
+                target("src/**/*.java")
+                googleJavaFormat("1.30.0")
+                removeUnusedImports()
+                trimTrailingWhitespace()
+                endWithNewline()
             }
         }
 
@@ -46,5 +44,7 @@ class CodeQualityConventionsPlugin : Plugin<Project> {
                 html.required.set(true)
             }
         }
+
+
     }
 }

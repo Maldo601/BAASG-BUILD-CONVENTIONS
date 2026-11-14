@@ -76,8 +76,11 @@ class CodeQualityConventionsPluginTest {
             .withArguments(
                 "verifyConventions",
                 "checkstyleMain",
-                "--stacktrace"
-            ).build()
+                "--stacktrace",
+                "--info"
+            )
+            .forwardOutput()
+            .build()
 
         assertEquals(
             TaskOutcome.SUCCESS,
